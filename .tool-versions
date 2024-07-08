@@ -1,6 +1,6 @@
 # This file is for you! Please, updated to the versions agreed by your team.
 
-terraform 1.7.0
+terraform 1.8.5
 pre-commit 3.6.0
 nodejs 18.18.2
 gitleaks 8.18.4

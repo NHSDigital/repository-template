@@ -1,8 +1,8 @@
-# Github
+# GitHub
 
 ## Branch Protection Rules
 
-This will create the default branch protection rules using Github API.
+This will create the default branch protection rules using GitHub API.
 
 ```sh
 ./branch-protection.sh $reponame $PAT
