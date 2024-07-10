@@ -1,7 +1,7 @@
 # NHS Notify Code Owners
 
 # Notify default owners
-* @rossbugginsnhs @m-houston @edmundcraske2-nhs @timireland
+* @rossbugginsnhs @m-houston @aidenvaines-bjss @timireland
 
 # Codeowners must be final check
 /.github/CODEOWNERS @NHSDigital/nhs-notify-code-owners
