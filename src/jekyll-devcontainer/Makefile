@@ -16,4 +16,6 @@ publish:
 
 debug:
 	devcontainer up --workspace-folder ./src
-	devcontainer exec --workspace-folder ./src ls -la
+	devcontainer exec --workspace-folder ./src ls -la ./.devcontainer
+	devcontainer exec --workspace-folder ./src cat ./.devcontainer/packages.txt
+	devcontainer exec --workspace-folder ./src ./.devcontainer/check.sh
