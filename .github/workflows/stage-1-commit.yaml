@@ -77,15 +77,55 @@ jobs:
           fetch-depth: 0 # Full history is needed to compare branches
       - name: "Check English usage"
         uses: ./.github/actions/check-english-usage
+  detect-terraform-changes:
+    name: "Detect Terraform Changes"
+    runs-on: ubuntu-latest
+    outputs:
+      terraform_changed: ${{ steps.check.outputs.terraform_changed }}
+    steps:
+      - name: "Checkout code"
+        uses: actions/checkout@v4
+
+      - name: "Check for Terraform changes"
+        id: check
+        run: |
+          git fetch origin main || true  # Ensure you have the latest main branch
+          CHANGED_FILES=$(git diff --name-only HEAD origin/main)
+          echo "Changed files: $CHANGED_FILES"
+
+          if echo "$CHANGED_FILES" | grep -qE '\.tf$'; then
+            echo "Terraform files have changed."
+            echo "terraform_changed=true" >> $GITHUB_OUTPUT
+          else
+            echo "No Terraform changes detected."
+            echo "terraform_changed=false" >> $GITHUB_OUTPUT
+          fi
   lint-terraform:
     name: "Lint Terraform"
     runs-on: ubuntu-latest
     timeout-minutes: 2
+    needs: detect-terraform-changes
+    if: needs.detect-terraform-changes.outputs.terraform_changed == 'true'
     steps:
       - name: "Checkout code"
         uses: actions/checkout@v4
       - name: "Lint Terraform"
         uses: ./.github/actions/lint-terraform
+  tfsec:
+    name: "TFSec Scan"
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    needs: detect-terraform-changes
+    if: needs.detect-terraform-changes.outputs.terraform_changed == 'true'
+    steps:
+      - name: "Checkout code"
+        uses: actions/checkout@v4
+      - name: "Setup ASDF"
+        uses: asdf-vm/actions/setup@v3
+      - name: "Perform Setup"
+        uses: ./.github/actions/setup
+      - name: "TFSec Scan"
+        uses: ./.github/actions/tfsec
   count-lines-of-code:
     name: "Count lines of code"
     runs-on: ubuntu-latest

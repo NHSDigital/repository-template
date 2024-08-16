@@ -1,0 +1,22 @@
+name: Make Config Action
+description: Install dependencies and execute make config
+
+runs:
+  using: composite
+  steps:
+    - name: Install dependencies and execute make config
+      shell: bash
+      run: |-
+        echo -n "
+        ====================================================================\n
+        ==== Starting setup for ${{ github.job }} ==== @ $(date) \n
+        ====================================================================\n
+        "
+
+        scripts/setup/setup.sh
+
+        echo -n "
+        ====================================================================\n
+        ==== Setup done ${{ github.job }} ==== @ $(date) \n
+        ====================================================================\n
+        "
