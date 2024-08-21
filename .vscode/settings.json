@@ -9,6 +9,7 @@
     "**/CVS": true,
     "**/Thumbs.db": true,
     ".devcontainer": true,
+    ".github": false,
     ".vscode": false
   }
 }
