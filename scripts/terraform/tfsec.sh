@@ -40,7 +40,7 @@ function run-tfsec-natively() {
     --concise-output \
     --force-all-dirs \
     --exclude-downloaded-modules \
-    --config-file ../config/tfsec.yaml \
+    --config-file scripts/config/tfsec.yaml \
     --format text \
     "$dir_to_scan"
 
@@ -76,7 +76,7 @@ function run-tfsec-in-docker() {
         --concise-output \
         --force-all-dirs \
         --exclude-downloaded-modules \
-        --config-file ../config/tfsec.yaml \
+        --config-file scripts/config/tfsec.yaml \
         --format text \
         "$dir_to_scan"
     check-tfsec-status
