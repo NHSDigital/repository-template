@@ -1,0 +1,17 @@
+name: "TFSec Scan"
+description: "Scan HCL using TFSec"
+runs:
+  using: "composite"
+  steps:
+    - name: "TFSec Scan - Components"
+      shell: bash
+      run: |
+        for component in $(find infrastructure/terraform/components -mindepth 1 -type d); do
+          scripts/terraform/tfsec.sh $component
+        done
+    - name: "TFSec Scan - Modules"
+      shell: bash
+      run: |
+        for module in $(find infrastructure/terraform/modules -mindepth 1 -type d); do
+          scripts/terraform/tfsec.sh $module
+        done

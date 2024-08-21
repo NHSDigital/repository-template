@@ -1,0 +1,10 @@
+name: Make Config Action
+description: Install dependencies and execute make config
+
+runs:
+  using: composite
+  steps:
+    - name: Install dependencies and execute make config
+      shell: bash
+      run: |
+        scripts/setup/setup.sh
