@@ -1,0 +1,24 @@
+name: Combine Dependabot PRs
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+  checks: read
+
+jobs:
+  combine-prs:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: combine-prs
+        id: combine-prs
+        uses: github/combine-prs@v5.1.0
+        with:
+          ci_required: false
+          labels: dependencies
+          pr_title: Combined Dependabot PRs
+          combine_branch_name: dependabotCombined
+          pr_body_header: Combined Dependabot PRs
