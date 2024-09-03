@@ -17,6 +17,13 @@ repos:
     # -   id: ...
   - repo: local
     hooks:
+      - id: sort-dictionary
+        name: Sort dictionary
+        entry: ./scripts/githooks/sort-dictionary.sh
+        language: script
+        pass_filenames: false
+  - repo: local
+    hooks:
       - id: scan-secrets
         name: Scan secrets
         entry: /usr/bin/env check=whole-history ./scripts/githooks/scan-secrets.sh
