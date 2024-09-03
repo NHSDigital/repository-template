@@ -2,8 +2,8 @@ act 0.2.64
 gitleaks 8.18.4
 pre-commit 3.6.0
 terraform 1.9.2
-vale 3.6.0
 tfsec 1.28.10
+vale 3.6.0
 
 # ==============================================================================
 # The section below is reserved for Docker image versions.
