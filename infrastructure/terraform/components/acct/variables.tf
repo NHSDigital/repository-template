@@ -41,24 +41,24 @@ variable "component" {
   default     = "acct"
 }
 
-variable "nhs_notify_domain" {
-  type        = string
-  description = "The name of the NHS Notify Domain that this is deploying to"
-}
-
 variable "default_tags" {
   type        = map(string)
   description = "A map of default tags to apply to all taggable resources within the component"
   default     = {}
 }
 
-
 ##
-# Variables specific to the "acct" component
+# Variables specific to the "dnsroot"component
 ##
 
-variable "subdomain_name" {
+variable "log_retention_in_days" {
+  type        = number
+  description = "The retention period in days for the Cloudwatch Logs events to be retained, default of 0 is indefinite"
+  default     = 0
+}
+
+variable "root_domain_name" {
   type        = string
-  description = "The subdomain name to create a Route53 zone for"
-  default     = ""
+  description = "The service's root DNS root nameespace, like nonprod.nhsnotify.national.nhs.uk"
+  default     = "nonprod.nhsnotify.national.nhs.uk"
 }

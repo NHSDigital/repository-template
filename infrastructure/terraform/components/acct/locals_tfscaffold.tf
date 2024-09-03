@@ -34,12 +34,11 @@ locals {
   default_tags = merge(
     var.default_tags,
     {
-      Project         = var.project
-      Environment     = var.environment
-      Component       = var.component
-      Group           = var.group
-      NHSNotifyDomain = var.nhs_notify_domain
-      Name            = local.csi
+      Project     = var.project
+      Environment = var.environment
+      Component   = var.component
+      Group       = var.group
+      Name        = local.csi
     },
   )
 }

@@ -1,5 +1,0 @@
-README for 'acct' component - Account-level resources
-
-This component is intended to be run to set up things (such as a DNS subdomain) at the account level, and this should be run for each account belonging to the Notify Domain - i.e. there should be a nonprod and prod environment .tfvars
-
-Copy the `env_eu-west-2_example.tfvars` file in the `etc` directory and adjust as needed for nonprod and prod for your NHS Notify Domain.
