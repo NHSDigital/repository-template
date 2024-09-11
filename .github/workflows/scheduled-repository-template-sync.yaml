@@ -1,0 +1,55 @@
+name: Repository Template Sync
+
+on:
+  schedule:
+    - cron: '0 0 1 * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+  checks: read
+
+jobs:
+  update-external-repo:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check out the repository
+      uses: actions/checkout@v4
+
+    - name: Check out external repository
+      uses: actions/checkout@v4
+      with:
+        repository: NHSDigital/nhs-notify-repository-template
+        path: nhs-notify-repository-template
+        token: ${{ github.token }}
+
+    - name: Run syncronisation script
+      run: |
+        ./scripts/githooks/sync-template-repo.sh
+        rm -Rf ./nhs-notify-repository-template
+
+    - name: Create Pull Request
+      if: ${{ !env.ACT }}
+      uses: peter-evans/create-pull-request@v7.0.1
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        commit-message: Drift from template
+        branch: scheduledTemplateRepositorySync
+        delete-branch: true
+        title: '[Template Sync] Drift from template-repository remediation'
+        body: |
+          # Resultant drift from repository template
+
+          ## Who should respond to this PR?
+          The team which owns the responsibility for this component repository. You may want to consult other contributors.
+
+          ## How to progress this PR
+          The repositories guardians should review the contents of the PR and decide how to proceed, you may wish to back-out certain changes or accept them from the upstream `nhsdigital/nhs-notify-repository-template` repository.
+
+          If there are changes you do not wish to see again, it is recommended you add exclusions to `scripts/config/.repository-template-sync-ignore`.
+        labels: |
+          template
+          automation
+        draft: false
