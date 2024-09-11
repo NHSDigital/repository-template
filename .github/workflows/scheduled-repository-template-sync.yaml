@@ -28,6 +28,7 @@ jobs:
     - name: Run syncronisation script
       run: |
         ./scripts/githooks/sync-template-repo.sh
+        rm -Rf ./nhs-notify-repository-template
 
     - name: Create Pull Request
       if: ${{ !env.ACT }}
