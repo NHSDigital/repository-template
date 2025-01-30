@@ -61,7 +61,7 @@ terraform-sec: # TFSEC check against Terraform files - optional: terraform_dir|d
 		--exclude-downloaded-modules \
 		--tfvars-file infrastructure/terraform/etc/global.tfvars \
 		--tfvars-file infrastructure/terraform/etc/env_eu-west-2_main.tfvars \
-		--config-file scripts/config/tfsec.yml
+		--config-file scripts/config/tfsec.yaml
 
 # ==============================================================================
 # Module tests and examples - please DO NOT edit this section!
