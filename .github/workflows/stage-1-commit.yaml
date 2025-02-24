@@ -66,6 +66,32 @@ jobs:
           fetch-depth: 0 # Full history is needed to compare branches
       - name: "Check Markdown format"
         uses: ./.github/actions/check-markdown-format
+  terraform-docs:
+    name: "Run terraform-docs"
+    runs-on: ubuntu-latest
+    needs: detect-terraform-changes
+    if: needs.detect-terraform-changes.outputs.terraform_changed == 'true'
+    permissions:
+        contents: write
+    steps:
+      - name: "Checkout code"
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Full history is needed to compare branches
+      - name: "Check to see if Terraform Docs are up-to-date"
+        run: |
+          for dir in $(find infrastructure/terraform/{components,modules} -mindepth 1 -maxdepth 1 -type d); do
+              make terraform-docs dir=$dir
+          done
+      - name: "Stage changes"
+        run: |
+          git add infrastructure/terraform/**/*.md
+      - name: "Check for changes in Terraform Docs"
+        run: |
+          if git diff --cached --name-only | grep -qE '\.md$'; then
+            echo "Markdown files have changed. Please run 'make terraform-docs' and commit the changes."
+            exit 1
+          fi
   check-english-usage:
     name: "Check English usage"
     runs-on: ubuntu-latest
