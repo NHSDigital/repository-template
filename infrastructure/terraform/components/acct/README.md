@@ -1,4 +1,6 @@
 <!-- BEGIN_TF_DOCS -->
+<!-- markdownlint-disable -->
+<!-- vale off -->
 
 ## Requirements
 
@@ -27,4 +29,6 @@ No modules.
 | Name | Description |
 |------|-------------|
 | <a name="output_dns_zone"></a> [dns\_zone](#output\_dns\_zone) | n/a |
+<!-- vale on -->
+<!-- markdownlint-enable -->
 <!-- END_TF_DOCS -->

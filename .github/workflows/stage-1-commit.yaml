@@ -80,9 +80,7 @@ jobs:
           fetch-depth: 0 # Full history is needed to compare branches
       - name: "Check to see if Terraform Docs are up-to-date"
         run: |
-          for dir in $(find infrastructure/terraform/{components,modules} -mindepth 1 -maxdepth 1 -type d); do
-              make terraform-docs dir=$dir
-          done
+          make terraform-docs
       - name: "Stage changes"
         run: |
           git add infrastructure/terraform/**/*.md

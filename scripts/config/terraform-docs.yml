@@ -22,7 +22,11 @@ output:
   mode: inject
   template: |-
     <!-- BEGIN_TF_DOCS -->
+    <!-- markdownlint-disable -->
+    <!-- vale off -->
     {{ .Content }}
+    <!-- vale on -->
+    <!-- markdownlint-enable -->
     <!-- END_TF_DOCS -->
 
 output-values:

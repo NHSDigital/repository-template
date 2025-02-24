@@ -26,11 +26,7 @@ function main() {
 #   check_only=[do not format, run check only]
 function terraform-docs() {
 
-  # shellcheck disable=SC2044
-  for dir in $(find infrastructure/terraform/{components,modules} -mindepth 1 -maxdepth 1 -type d); do
-    make terraform-docs dir="${dir}"
-  done
-
+  make terraform-docs
   git add infrastructure/terraform/**/*.md
 }
 
