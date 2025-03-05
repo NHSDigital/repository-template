@@ -5,13 +5,15 @@ set -euo pipefail
 # Script to synchronise the nhs-notify-template-repository with this repository
 #
 # Usage:
-#   $ [options] ./check-terraform-format.sh
+#   $ [options] ./sync-template-repo.sh
 #
 # Options:
 #   new_only=true      # Only identify new files from the template-repository
 #   changes_only=true  # Only identify files which have drifted from the template-repository
 
 # ==============================================================================
+
+scriptdir=$(realpath "$(dirname "$0")")
 
 # Command line parameters
 new_only=${new_only:-false}
@@ -108,17 +110,9 @@ while IFS= read -r -d '' file; do
       if ! diff -q "$file" "$target_path" > /dev/null 2>&1; then
         if is_merge "$relative_path"; then
           echo "Merging changes from $relative_path"
-          cp "$target_path" "${target_path}.bak"
-          if git merge-file "$target_path" /dev/null "$file" --union; then
-              if ! cmp -s "$target_path" "${target_path}.bak"; then
-                  FILES_WITH_CHANGES+=("${relative_path}")
-              fi
-          else
-              echo "Merge failed for $relative_path, rolling back."
-              mv "${target_path}.bak" "$target_path"
-              diff3 "$target_path" /dev/null "$file"
-          fi
-          rm -f "${target_path}.bak"
+          echo node "$(dirname "$0")/merge.js" "$target_path" "$file"
+          node "${scriptdir}/merge.js" "$target_path" "$file" > "$target_path.merged"
+          mv "$target_path.merged" "$target_path"
         else
           echo "Copying changes from $relative_path"
           cp "$file" "$target_path"
