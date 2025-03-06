@@ -86,7 +86,7 @@ FILES_ADDED=()
 FILES_WITH_CHANGES=()
 
 # Loop through all files in the template directory
-while IFS= read -r -d '' file; do
+while IFS= read -r -d '' file || [[ -n $file ]]; do
   relative_path="${file#./}"  # Remove leading './'
 
   # Check if the file is ignored
@@ -110,9 +110,13 @@ while IFS= read -r -d '' file; do
       if ! diff -q "$file" "$target_path" > /dev/null 2>&1; then
         if is_merge "$relative_path"; then
           echo "Merging changes from $relative_path"
-          echo node "$(dirname "$0")/merge.js" "$target_path" "$file"
-          node "${scriptdir}/merge.js" "$target_path" "$file" > "$target_path.merged"
-          mv "$target_path.merged" "$target_path"
+          cp "$target_path" "${target_path}.bak"
+          node "${scriptdir}/merge.js" "$target_path" "$file" > "${target_path}.merged"
+          if ! cmp -s "${target_path}.merged" "${target_path}.bak"; then
+            FILES_WITH_CHANGES+=("${relative_path}")
+            mv "${target_path}.merged" "$target_path"
+          fi
+          rm -f "${target_path}.merged" "${target_path}.bak"
         else
           echo "Copying changes from $relative_path"
           cp "$file" "$target_path"
@@ -123,19 +127,19 @@ while IFS= read -r -d '' file; do
   fi
 done < <(find . -type f -print0)
 
-echo "${#FILES_ADDED[@]}" files added, "${#FILES_WITH_CHANGES[@]}" files with changes detected.
-
 echo ------------------------------------------
+echo "${#FILES_ADDED[@]} files added, ${#FILES_WITH_CHANGES[@]} files with changes detected."
 
-if [ "$changes_only" == false ]; then
+if [[ "$changes_only" == false && ${#FILES_ADDED[@]} -gt 0 ]]; then
   echo ------------------------------------------
   echo "New files added:"
   printf ' - %s\n' "${FILES_ADDED[@]}"
 fi
 
-
-if [ "$new_only" == false ]; then
+if [[ "$new_only" == false && ${#FILES_WITH_CHANGES[@]} -gt 0 ]]; then
   echo ------------------------------------------
   echo "Changed files:"
   printf ' - %s\n' "${FILES_WITH_CHANGES[@]}"
 fi
+
+echo ------------------------------------------
