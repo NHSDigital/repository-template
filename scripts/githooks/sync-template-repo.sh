@@ -111,7 +111,7 @@ while IFS= read -r -d '' file || [[ -n $file ]]; do
         if is_merge "$relative_path"; then
           echo "Merging changes from $relative_path"
           cp "$target_path" "${target_path}.bak"
-          node "${scriptdir}/merge.js" "$target_path" "$file" > "${target_path}.merged"
+          node "${scriptdir}/../maintenance/merge.js" "$target_path" "$file" > "${target_path}.merged"
           if ! cmp -s "${target_path}.merged" "${target_path}.bak"; then
             FILES_WITH_CHANGES+=("${relative_path}")
             mv "${target_path}.merged" "$target_path"

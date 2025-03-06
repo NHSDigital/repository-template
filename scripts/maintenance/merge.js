@@ -1,3 +1,18 @@
+/*******************************************************************************
+ * Script to merge all added lines from source to target.
+ * Modified lines will be left intact.
+ *
+ * This is intended for updating config files like .tool-versions and .gitignore
+ * where the first token on the line remains the same
+ *
+ * Usage:
+ *   $ node merge.js <target> <source>
+ *
+ * Output:
+ *   Outputs the merged file to stdout
+ *
+ *******************************************************************************/
+
 const fs = require("fs");
 
 // Read files
