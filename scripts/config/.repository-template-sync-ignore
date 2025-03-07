@@ -1,5 +1,4 @@
 # Files and folders to ignore when syncing nhs-notify-repository-template back in to this repository
-scripts/config/.repository-template-sync-ignore
 .github/workflows/
 nhs-notify-repository-template/
 
