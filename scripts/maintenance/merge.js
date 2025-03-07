@@ -25,7 +25,7 @@ const tokenize = line => {
   if (line === '') {
     return [];
   }
-  return line.split(/\s+/).filter(x => x !== '#').slice(0, 1);
+  return line.split(/\s+|[:=]/).filter(x => x !== '#' && x !== '').slice(0, 1);
 };
 const lines1Tokens = lines1.flatMap(tokenize);
 
