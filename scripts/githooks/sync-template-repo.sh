@@ -42,15 +42,13 @@ if [ ! -f "${MERGE_FILE}" ]; then
   echo "# Files and folders to merge when syncing ${TEMPLATE_REPO_DIR} back in to this repository" > ${MERGE_FILE}
 fi
 
-# Read the .template-ignore file into an array
-while IFS= read -r line || [ -n "$line" ]; do
-  IGNORED_PATHS+=("$line")
-done < "$IGNORE_FILE"
+TMP_SYNC_IGNORE=${PWD}/tmp-sync-ignore
+mkdir -p "${TMP_SYNC_IGNORE}"
+cp "${IGNORE_FILE}" "${TMP_SYNC_IGNORE}/.gitignore"
 
-# Read the .template-merge file into an array
-while IFS= read -r line || [ -n "$line" ]; do
-  MERGED_PATHS+=("$line")
-done < "$MERGE_FILE"
+TMP_SYNC_MERGE=${PWD}/tmp-sync-merge
+mkdir -p "${TMP_SYNC_MERGE}"
+cp "${MERGE_FILE}" "${TMP_SYNC_MERGE}/.gitignore"
 
 # Check if a file is ignored.
 is_ignored() {
@@ -61,27 +59,25 @@ is_ignored() {
     return 0
   fi
 
-  for ignored in "${IGNORED_PATHS[@]}"; do
-    if [[ -n "$ignored" && "$file" =~ $ignored ]]; then
-      return 0
-    fi
-  done
-  return 1
+  pushd "${TMP_SYNC_IGNORE}" > /dev/null
+  git check-ignore -q "${file}"
+  R=$?
+  popd > /dev/null
+  return $R
 }
 
 is_merge() {
   local file=${1}
 
-  for merged in "${MERGED_PATHS[@]}"; do
-    if [[ -n "$merged" && "$file" =~ $merged ]]; then
-      return 0
-    fi
-  done
-  return 1
+  pushd "${TMP_SYNC_MERGE}" > /dev/null
+  git check-ignore -q "${file}"
+  R=$?
+  popd > /dev/null
+  return $R
 }
 
 # Navigate to the template directory
-cd "${TEMPLATE_REPO_DIR}" || exit
+pushd "${TEMPLATE_REPO_DIR}" || exit
 FILES_ADDED=()
 FILES_WITH_CHANGES=()
 
@@ -126,6 +122,9 @@ while IFS= read -r -d '' file || [[ -n $file ]]; do
     fi
   fi
 done < <(find . -type f -print0)
+
+popd
+rm -rf "${TMP_SYNC_IGNORE}" "${TMP_SYNC_MERGE}"
 
 echo ------------------------------------------
 echo "${#FILES_ADDED[@]} files added, ${#FILES_WITH_CHANGES[@]} files with changes detected."
