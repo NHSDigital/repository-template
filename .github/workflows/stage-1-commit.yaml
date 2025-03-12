@@ -36,7 +36,7 @@ jobs:
   scan-secrets:
     name: "Scan secrets"
     runs-on: ubuntu-latest
-    timeout-minutes: 2
+    timeout-minutes: 5
     steps:
       - name: "Checkout code"
         uses: actions/checkout@v4
@@ -47,7 +47,7 @@ jobs:
   check-file-format:
     name: "Check file format"
     runs-on: ubuntu-latest
-    timeout-minutes: 2
+    timeout-minutes: 5
     steps:
       - name: "Checkout code"
         uses: actions/checkout@v4
@@ -58,7 +58,7 @@ jobs:
   check-markdown-format:
     name: "Check Markdown format"
     runs-on: ubuntu-latest
-    timeout-minutes: 2
+    timeout-minutes: 5
     steps:
       - name: "Checkout code"
         uses: actions/checkout@v4
@@ -93,7 +93,7 @@ jobs:
   check-english-usage:
     name: "Check English usage"
     runs-on: ubuntu-latest
-    timeout-minutes: 2
+    timeout-minutes: 5
     steps:
       - name: "Checkout code"
         uses: actions/checkout@v4
@@ -127,7 +127,7 @@ jobs:
   lint-terraform:
     name: "Lint Terraform"
     runs-on: ubuntu-latest
-    timeout-minutes: 2
+    timeout-minutes: 5
     needs: detect-terraform-changes
     if: needs.detect-terraform-changes.outputs.terraform_changed == 'true'
     steps:
@@ -156,7 +156,7 @@ jobs:
     permissions:
       id-token: write
       contents: read
-    timeout-minutes: 2
+    timeout-minutes: 5
     steps:
       - name: "Checkout code"
         uses: actions/checkout@v4
@@ -175,7 +175,7 @@ jobs:
     permissions:
       id-token: write
       contents: read
-    timeout-minutes: 2
+    timeout-minutes: 5
     steps:
       - name: "Checkout code"
         uses: actions/checkout@v4
