@@ -793,8 +793,8 @@ case "${action}" in
     ;;
   *)
     echo -e "Generic action case invoked. Only the additional arguments will be passed to terraform, you break it you fix it:";
-    echo -e "\tterraform ${action} ${extra_args}";
-    terraform "${action}" ${extra_args} \
+    echo -e "\tterraform ${action} ${extra_args} | tee terraform_output";
+    terraform "${action}" ${extra_args} | tee terraform_output \
       || error_and_die "Terraform ${action} failed.";
     ;;
 esac;
