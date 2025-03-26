@@ -2,22 +2,21 @@
 nhs-notify-repository-template/
 
 # Files and Folders in this repository to ignore
+.editorconfig
+.github/CODEOWNERS
+.gitleaksignore
 .vscode/
+/Makefile
 CHANGELOG.md
-project.code-workspace
 README.md
 VERSION
-.github/CODEOWNERS
-.editorconfig
-.gitleaksignore
-scripts/tests/
-/Makefile
+project.code-workspace
 scripts/config/sonar-scanner.properties
+scripts/tests/
 
 # Files and Folders in the template repository to disregard
 .devcontainer/
 .github/workflows/cicd-*.yaml
-scripts/**/examples/
 docs/
 infrastructure/terraform/components/
-scripts/docker/examples/
+scripts/**/examples/
