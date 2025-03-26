@@ -11,7 +11,7 @@ VERSION
 .editorconfig
 .gitleaksignore
 scripts/tests/
-Makefile
+/Makefile
 scripts/config/sonar-scanner.properties
 
 # Files and Folders in the template repository to disregard
