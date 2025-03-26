@@ -9,7 +9,7 @@ drawio
 endcapture
 endfor
 endraw
-GitHub
+Git[Hh]ub
 Gitleaks
 Grype
 idempotence
