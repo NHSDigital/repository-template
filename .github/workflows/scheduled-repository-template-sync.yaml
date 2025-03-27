@@ -27,12 +27,12 @@ jobs:
 
     - name: Run syncronisation script
       run: |
-        ./scripts/githooks/sync-template-repo.sh
+        ./nhs-notify-repository-template/scripts/githooks/sync-template-repo.sh
         rm -Rf ./nhs-notify-repository-template
 
     - name: Create Pull Request
       if: ${{ !env.ACT }}
-      uses: peter-evans/create-pull-request@v7.0.1
+      uses: peter-evans/create-pull-request@v7.0.6
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
         commit-message: Drift from template

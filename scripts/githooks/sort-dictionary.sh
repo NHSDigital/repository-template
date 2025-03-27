@@ -25,7 +25,8 @@ function main() {
   mv $root/accept.sorted.txt $root/accept.txt
   mv $root/reject.sorted.txt $root/reject.txt
 
-  git add -uv $root/*
+  # Update the sorted files in the staged git index
+  git add --update --verbose $root/*
 }
 
 # ==============================================================================

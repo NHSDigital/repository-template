@@ -9,7 +9,6 @@ repos:
       - id: check-symlinks
       - id: detect-private-key
       - id: end-of-file-fixer
-        exclude: .+\.cs
       - id: forbid-new-submodules
       - id: mixed-line-ending
       - id: pretty-format-json
