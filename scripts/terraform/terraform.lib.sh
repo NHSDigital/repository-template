@@ -58,7 +58,6 @@ function terraform-fmt() {
         terraform fmt --recursive "${d}"
     fi
   done
-
 }
 
 # Validate Terraform code.

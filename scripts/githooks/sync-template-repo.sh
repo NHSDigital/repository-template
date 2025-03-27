@@ -5,7 +5,7 @@ set -euo pipefail
 # Script to synchronise the nhs-notify-template-repository with this repository
 #
 # Usage:
-#   $ [options] ./check-terraform-format.sh
+#   $ [options] ./sync-template-repo.sh
 #
 # Options:
 #   new_only=true      # Only identify new files from the template-repository
@@ -13,13 +13,16 @@ set -euo pipefail
 
 # ==============================================================================
 
-# Command line prameters
+scriptdir=$(realpath "$(dirname "$0")")
+
+# Command line parameters
 new_only=${new_only:-false}
 changes_only=${changes_only:-false}
 
 # Set variables
 TEMPLATE_REPO_DIR="nhs-notify-repository-template"
 IGNORE_FILE="scripts/config/.repository-template-sync-ignore"
+MERGE_FILE="scripts/config/.repository-template-sync-merge"
 
 # Check if the template directory exists
 if [ ! -d "${TEMPLATE_REPO_DIR}" ]; then
@@ -34,10 +37,20 @@ if [ ! -f "${IGNORE_FILE}" ]; then
   echo "# Files and Folders in the template repository to disregard" >> ${IGNORE_FILE}
 fi
 
+# Check if the .template-merge file exists, create an empty one if not
+if [ ! -f "${MERGE_FILE}" ]; then
+  echo "# Files and folders to merge when syncing ${TEMPLATE_REPO_DIR} back in to this repository" > ${MERGE_FILE}
+fi
+
 # Read the .template-ignore file into an array
 while IFS= read -r line || [ -n "$line" ]; do
   IGNORED_PATHS+=("$line")
 done < "$IGNORE_FILE"
+
+# Read the .template-merge file into an array
+while IFS= read -r line || [ -n "$line" ]; do
+  MERGED_PATHS+=("$line")
+done < "$MERGE_FILE"
 
 # Check if a file is ignored.
 is_ignored() {
@@ -56,13 +69,24 @@ is_ignored() {
   return 1
 }
 
+is_merge() {
+  local file=${1}
+
+  for merged in "${MERGED_PATHS[@]}"; do
+    if [[ -n "$merged" && "$file" =~ $merged ]]; then
+      return 0
+    fi
+  done
+  return 1
+}
+
 # Navigate to the template directory
 cd "${TEMPLATE_REPO_DIR}" || exit
 FILES_ADDED=()
 FILES_WITH_CHANGES=()
 
 # Loop through all files in the template directory
-while IFS= read -r -d '' file; do
+while IFS= read -r -d '' file || [[ -n $file ]]; do
   relative_path="${file#./}"  # Remove leading './'
 
   # Check if the file is ignored
@@ -84,27 +108,38 @@ while IFS= read -r -d '' file; do
     # If the file exists, check if it's different
     if [ "$new_only" == false ]; then
       if ! diff -q "$file" "$target_path" > /dev/null 2>&1; then
-        echo "Merging changes from $relative_path"
-        FILES_WITH_CHANGES+=("${relative_path}")
-        cp "$file" "$target_path"
+        if is_merge "$relative_path"; then
+          echo "Merging changes from $relative_path"
+          cp "$target_path" "${target_path}.bak"
+          node "${scriptdir}/../maintenance/merge.js" "$target_path" "$file" > "${target_path}.merged"
+          if ! cmp -s "${target_path}.merged" "${target_path}.bak"; then
+            FILES_WITH_CHANGES+=("${relative_path}")
+            mv "${target_path}.merged" "$target_path"
+          fi
+          rm -f "${target_path}.merged" "${target_path}.bak"
+        else
+          echo "Copying changes from $relative_path"
+          cp "$file" "$target_path"
+          FILES_WITH_CHANGES+=("${relative_path}")
+        fi
       fi
     fi
   fi
 done < <(find . -type f -print0)
 
-echo "${#FILES_ADDED[@]}" files added, "${#FILES_WITH_CHANGES[@]}" files with changes detected.
-
 echo ------------------------------------------
+echo "${#FILES_ADDED[@]} files added, ${#FILES_WITH_CHANGES[@]} files with changes detected."
 
-if [ "$changes_only" == false ]; then
+if [[ "$changes_only" == false && ${#FILES_ADDED[@]} -gt 0 ]]; then
   echo ------------------------------------------
   echo "New files added:"
   printf ' - %s\n' "${FILES_ADDED[@]}"
 fi
 
-
-if [ "$new_only" == false ]; then
+if [[ "$new_only" == false && ${#FILES_WITH_CHANGES[@]} -gt 0 ]]; then
   echo ------------------------------------------
   echo "Changed files:"
   printf ' - %s\n' "${FILES_WITH_CHANGES[@]}"
 fi
+
+echo ------------------------------------------

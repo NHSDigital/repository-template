@@ -57,3 +57,10 @@ repos:
         entry: ./scripts/githooks/check-terraform-format.sh
         language: script
         pass_filenames: false
+  - repo: local
+    hooks:
+      - id: generate-terraform-docs
+        name: Generate Terraform Docs
+        entry: ./scripts/githooks/check-terraform-docs.sh
+        language: script
+        pass_filenames: false

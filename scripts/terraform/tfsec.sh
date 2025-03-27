@@ -37,12 +37,10 @@ function run-tfsec-natively() {
 
   echo "Running TFSec on directory: $dir_to_scan"
   tfsec \
-    --concise-output \
     --force-all-dirs \
     --exclude-downloaded-modules \
     --config-file scripts/config/tfsec.yaml \
     --format text \
-    --soft-fail \
     "$dir_to_scan"
 
   check-tfsec-status
