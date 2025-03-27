@@ -1,17 +1,22 @@
 # Files and folders to ignore when syncing nhs-notify-repository-template back in to this repository
-.github/workflows/
 nhs-notify-repository-template/
 
 # Files and Folders in this repository to ignore
+.editorconfig
+.github/CODEOWNERS
+.gitleaksignore
 .vscode/
+/Makefile
 CHANGELOG.md
-project.code-workspace
 README.md
 VERSION
+project.code-workspace
+scripts/config/sonar-scanner.properties
+scripts/tests/
 
 # Files and Folders in the template repository to disregard
 .devcontainer/
 .github/workflows/cicd-*.yaml
-*/examples/
 docs/
 infrastructure/terraform/components/
+scripts/**/examples/
