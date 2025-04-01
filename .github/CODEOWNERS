@@ -3,6 +3,9 @@
 # Notify default owners
 * @rossbugginsnhs @m-houston @aidenvaines-bjss @timireland
 
+# Notify platform owners
+/infrastructure/terraform/  @NHSDigital/nhs-notify-platform
+
 # Codeowners must be final check
 /.github/CODEOWNERS @NHSDigital/nhs-notify-code-owners
 /CODEOWNERS @NHSDigital/nhs-notify-code-owners
