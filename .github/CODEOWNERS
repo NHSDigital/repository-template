@@ -1,11 +1,15 @@
 # NHS Notify Code Owners
 
 # Notify default owners
-* @rossbugginsnhs @m-houston @aidenvaines-bjss @timireland
+*                           @NHSDigital/nhs-notify-repository-template
+
+/.github/                   @NHSDigital/nhs-notify-repository-template-admins
+*.code-workspace            @NHSDigital/nhs-notify-repository-template-admins
+/infrastructure/terraform/  @NHSDigital/nhs-notify-platform
 
 # Codeowners must be final check
-/.github/CODEOWNERS @NHSDigital/nhs-notify-code-owners
-/CODEOWNERS @NHSDigital/nhs-notify-code-owners
+/.github/CODEOWNERS         @NHSDigital/nhs-notify-code-owners
+/CODEOWNERS                 @NHSDigital/nhs-notify-code-owners
 
 
 # Each NHS Notify repository should have clear code owners set.
