@@ -9,7 +9,7 @@ resource "aws_iam_role_policy_attachment" "github_deploy_overload" {
   policy_arn = aws_iam_policy.github_deploy_overload.arn
 }
 
-#tfsec:ignore:aws-iam-no-policy-wildcards Policy voilation expected for CI user role
+#trivy:ignore:aws-iam-no-policy-wildcards Policy voilation expected for CI user role
 data "aws_iam_policy_document" "github_deploy" {
   statement {
     effect = "Allow"

@@ -1,0 +1,6 @@
+---
+severity: MEDIUM              # Minimum reported findings
+exit-code: 1                  # When issues are found
+scan:
+  skip-files:
+    - "**/.terraform/**/*"

@@ -9,7 +9,7 @@ set -euo pipefail
 # Run tfsec for security checks on Terraform code.
 #
 # Usage:
-#   $ ./tfsec.sh [directory]
+#   $ ./trivy.sh [directory]
 # ==============================================================================
 
 function main() {
@@ -18,68 +18,63 @@ function main() {
 
   local dir_to_scan=${1:-.}
 
-  if command -v tfsec > /dev/null 2>&1 && ! is-arg-true "${FORCE_USE_DOCKER:-false}"; then
+  if command -v trivy > /dev/null 2>&1 && ! is-arg-true "${FORCE_USE_DOCKER:-false}"; then
     # shellcheck disable=SC2154
-    run-tfsec-natively "$dir_to_scan"
+    run-trivy-natively "$dir_to_scan"
   else
-    run-tfsec-in-docker "$dir_to_scan"
+    run-trivy-in-docker "$dir_to_scan"
   fi
 }
 
-# Run tfsec on the specified directory.
+# Run trivy on the specified directory.
 # Arguments:
 #   $1 - Directory to scan
-function run-tfsec-natively() {
+function run-trivy-natively() {
 
   local dir_to_scan="$1"
 
-  echo "TFSec found locally, running natively"
+  echo "Trivy found locally, running natively"
 
-  echo "Running TFSec on directory: $dir_to_scan"
-  tfsec \
-    --force-all-dirs \
-    --exclude-downloaded-modules \
-    --config-file scripts/config/tfsec.yaml \
-    --format text \
-    "$dir_to_scan"
+  echo "Running Trivy on directory: $dir_to_scan"
+  trivy config \
+    --config scripts/config/trivy.yaml \
+    --tf-exclude-downloaded-modules \
+    "${dir_to_scan}"
 
-  check-tfsec-status
+  check-trivy-status
 }
 
 # Check the exit status of tfsec.
-function check-tfsec-status() {
+function check-trivy-status() {
 
   if [ $? -eq 0 ]; then
-    echo "TFSec completed successfully."
+    echo "Trivy completed successfully."
   else
-    echo "TFSec found issues."
+    echo "Trivy found issues."
     exit 1
   fi
 }
 
-function run-tfsec-in-docker() {
+function run-trivy-in-docker() {
 
   # shellcheck disable=SC1091
   source ./scripts/docker/docker.lib.sh
   local dir_to_scan="$1"
 
   # shellcheck disable=SC2155
-  local image=$(name=aquasec/tfsec docker-get-image-version-and-pull)
+  local image=$(name=aquasec/trivy docker-get-image-version-and-pull)
   # shellcheck disable=SC2086
-  echo "TFSec not found locally, running in Docker Container"
-  echo "Running TFSec on directory: $dir_to_scan"
+  echo "Trivy not found locally, running in Docker Container"
+  echo "Running Trivy on directory: $dir_to_scan"
   docker run --rm --platform linux/amd64 \
     --volume "$PWD":/workdir \
     --workdir /workdir \
     "$image" \
-        --concise-output \
-        --force-all-dirs \
-        --exclude-downloaded-modules \
-        --config-file scripts/config/tfsec.yaml \
-        --format text \
-        --soft-fail \
-        "$dir_to_scan"
-    check-tfsec-status
+    config \
+    --config scripts/config/trivy.yaml \
+    --tf-exclude-downloaded-modules \
+    "${dir_to_scan}"
+    check-trivy-status
 }
 # ==============================================================================
 

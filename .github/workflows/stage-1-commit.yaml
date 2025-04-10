@@ -135,8 +135,8 @@ jobs:
         uses: actions/checkout@v4
       - name: "Lint Terraform"
         uses: ./.github/actions/lint-terraform
-  tfsec:
-    name: "TFSec Scan"
+  trivy:
+    name: "Trivy Scan"
     runs-on: ubuntu-latest
     timeout-minutes: 5
     needs: detect-terraform-changes
@@ -148,8 +148,8 @@ jobs:
         uses: asdf-vm/actions/setup@v3
       - name: "Perform Setup"
         uses: ./.github/actions/setup
-      - name: "TFSec Scan"
-        uses: ./.github/actions/tfsec
+      - name: "Trivy Scan"
+        uses: ./.github/actions/trivy
   count-lines-of-code:
     name: "Count lines of code"
     runs-on: ubuntu-latest

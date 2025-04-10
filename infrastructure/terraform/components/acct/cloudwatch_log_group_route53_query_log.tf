@@ -31,7 +31,7 @@ data "aws_iam_policy_document" "route53_logs" {
 
     resources = [
       aws_cloudwatch_log_group.aws_route53_query_log.arn,
-      "${aws_cloudwatch_log_group.aws_route53_query_log.arn}:*"
+      "${aws_cloudwatch_log_group.aws_route53_query_log.arn}:*",
     ]
   }
 }

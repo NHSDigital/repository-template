@@ -3,7 +3,7 @@ gitleaks 8.24.0
 pre-commit 3.6.0
 terraform 1.9.2
 terraform-docs 0.19.0
-tfsec 1.28.10
+trivy 0.61.0
 vale 3.6.0
 python 3.13.2
 
