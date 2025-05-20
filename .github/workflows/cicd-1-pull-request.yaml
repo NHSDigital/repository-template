@@ -127,18 +127,3 @@ jobs:
       terraform_version: "${{ needs.metadata.outputs.terraform_version }}"
       version: "${{ needs.metadata.outputs.version }}"
     secrets: inherit
-  publish-stage: # Recommended maximum execution time is 10 minutes
-    name: "Publish stage"
-    needs: [metadata, acceptance-stage]
-    uses: ./.github/workflows/stage-5-publish.yaml
-    if: (github.event_name == 'push' && github.ref == 'refs/heads/main')
-    with:
-      build_datetime: "${{ needs.metadata.outputs.build_datetime }}"
-      build_timestamp: "${{ needs.metadata.outputs.build_timestamp }}"
-      build_epoch: "${{ needs.metadata.outputs.build_epoch }}"
-      nodejs_version: "${{ needs.metadata.outputs.nodejs_version }}"
-      python_version: "${{ needs.metadata.outputs.python_version }}"
-      terraform_version: "${{ needs.metadata.outputs.terraform_version }}"
-      version: "${{ needs.metadata.outputs.version }}"
-      is_version_prerelease: "${{ needs.metadata.outputs.is_version_prerelease }}"
-    secrets: inherit
