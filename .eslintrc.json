@@ -1,0 +1,102 @@
+{
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:jest/recommended",
+    "plugin:jsx-a11y/recommended",
+    "plugin:prettier/recommended",
+    "plugin:security/recommended-legacy",
+    "plugin:sonarjs/recommended-legacy",
+    "plugin:unicorn/recommended"
+  ],
+  "overrides": [
+    {
+      "files": [
+        "*.js"
+      ],
+      "rules": {
+        "@typescript-eslint/no-require-imports": "off",
+        "@typescript-eslint/no-var-requires": "off",
+        "global-require": "off",
+        "unicorn/prefer-module": "off"
+      }
+    },
+    {
+      "files": [
+        "*.{test,spec}.{ts,tsx}"
+      ],
+      "rules": {
+        "max-classes-per-file": "off",
+        "sonarjs/no-nested-functions": "off",
+        "unicorn/consistent-function-scoping": "off",
+        "unicorn/no-useless-undefined": "off"
+      }
+    }
+  ],
+  "plugins": [
+    "@typescript-eslint",
+    "html",
+    "import",
+    "jest",
+    "jsx-a11y",
+    "prettier",
+    "security",
+    "sonarjs",
+    "unicorn"
+  ],
+  "rules": {
+    "@typescript-eslint/no-shadow": "error",
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+      {
+        "argsIgnorePattern": "^_",
+        "ignoreRestSiblings": true,
+        "varsIgnorePattern": "^_"
+      }
+    ],
+    "class-methods-use-this": "off",
+    "consistent-return": "off",
+    "import/extensions": "off",
+    "import/no-extraneous-dependencies": [
+      "error",
+      {
+        "devDependencies": [
+          "jest.config.ts",
+          "jest.setup.ts",
+          "**/__tests__/**",
+          "**/*.dev.[jt]s?(x)"
+        ]
+      }
+    ],
+    "import/prefer-default-export": "off",
+    "no-empty-function": "off",
+    "no-param-reassign": "off",
+    "no-restricted-syntax": "off",
+    "no-shadow": "off",
+    "no-underscore-dangle": "off",
+    "no-useless-constructor": "off",
+    "prefer-regex-literals": "off",
+    "prettier/prettier": "error",
+    "security/detect-object-injection": "off",
+    "sonarjs/no-duplicate-string": "off",
+    "sonarjs/no-small-switch": "off",
+    "sonarjs/no-unused-vars": "off",
+    "unicorn/filename-case": [
+      "error",
+      {
+        "case": "kebabCase",
+        "ignore": [
+          ".tsx"
+        ]
+      }
+    ],
+    "unicorn/no-null": "off",
+    "unicorn/prefer-module": "off",
+    "unicorn/prevent-abbreviations": "off"
+  },
+  "settings": {
+    "import/resolver": {
+      "typescript": {}
+    }
+  }
+}
