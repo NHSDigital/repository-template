@@ -11,3 +11,14 @@ version.json
 !project.code-workspace
 
 # Please, add your custom content below!
+
+# dependencies
+node_modules
+.node-version
+*/node_modules
+/.pnp
+.pnp.js
+/build
+dist
+.DS_Store
+.reports

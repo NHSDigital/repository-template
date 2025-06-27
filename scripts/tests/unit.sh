@@ -17,4 +17,10 @@ cd "$(git rev-parse --show-toplevel)"
 # tests from here. If you want to run other test suites, see the predefined
 # tasks in scripts/test.mk.
 
-echo "Unit tests are not yet implemented. See scripts/tests/unit.sh for more."
+# run tests
+npm ci
+npm run test:unit --workspaces
+
+# merge coverage reports
+mkdir -p .reports
+TMPDIR="./.reports" ./node_modules/.bin/lcov-result-merger "**/.reports/unit/coverage/lcov.info" ".reports/lcov.info" --ignore "node_modules" --prepend-source-files --prepend-path-fix "../../.."
