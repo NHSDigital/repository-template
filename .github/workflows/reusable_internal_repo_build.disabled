@@ -1,0 +1,144 @@
+## This workflow is DISABLED.
+## To enable, rename from .disabled to .yaml and replace any references as per the comments.
+name: Call Notify Internal Infrastructure Deployment
+## Sub workflow which plans and deploys Notify components as part of the workflow.
+## Review Gates may be required to proceed on triggered builds.
+
+on:
+  workflow_call:
+    inputs:
+      releaseVersion:
+        type: string
+        description: The Github release version, commit, or tag.
+        default: main
+      targetWorkflow:
+        type: string
+        description: The name of the github workflow to call.
+        default: main
+      targetEnvironment:
+        type: string
+        description: The Terraform environment to deploy
+        default: main
+      targetComponent:
+        type: string
+        description: The Terraform component to deploy
+        required: true
+      targetAccountGroup:
+        type: string
+        description: The Terraform group to deploy
+        required: true
+      terraformAction:
+        type: string
+        description: The Terraform component to deploy
+        default: plan
+
+concurrency:
+  group: ${{ inputs.targetEnvironment }}-${{ inputs.targetAccountGroup }}-${{ inputs.targetComponent }}-${{ inputs.terraformAction }}
+
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Trigger nhs-notify-internal static environment workflow deployment
+        shell: bash
+        run: |
+          set -x
+
+          DISPATCH_EVENT=$(jq -ncM \
+            --arg releaseVersion ${{ inputs.releaseVersion }} \
+            --arg targetEnvironment ${{ inputs.targetEnvironment }} \
+            --arg targetAccountGroup ${{ inputs.targetAccountGroup }} \
+            --arg targetComponent ${{ inputs.targetComponent }} \
+            --arg terraformAction ${{ inputs.terraformAction }} \
+            '{ "ref": "main",
+              "inputs": {
+                "releaseVersion", $releaseVersion,
+                "targetEnvironment", $targetEnvironment,
+                "targetAccountGroup", $targetAccountGroup,
+                "targetComponent", $targetComponent,
+                "terraformAction", $terraformAction
+              }
+            }')
+
+          # Trigger The workflow
+          curl -L \
+            --fail \
+            --silent \
+            -X POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${{ secrets.PR_TRIGGER_PAT }}" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/repos/NHSDigital/nhs-notify-internal/actions/workflows/${{ inputs.targetWorkflow }}/dispatches" \
+            -d "${DISPATCH_EVENT}"
+
+          echo "Workflow triggered successfully. HTTP response. Waiting for the workflow to complete.."
+
+          # Poll GitHub API to check the workflow status
+          run_id=""
+          for i in {1..12}; do
+            in_progress=$(curl -s \
+              -H "Accept: application/vnd.github+json" \
+              -H "Authorization: Bearer ${{ secrets.PR_TRIGGER_PAT }}" \
+              -H "X-GitHub-Api-Version: 2022-11-28" \
+              "https://api.github.com/repos/NHSDigital/nhs-notify-internal/actions/runs?event=workflow_dispatch&status=in_progress")
+
+            run_id=$(echo "$in_progress" | jq -r \
+              --arg env "${{ inputs.targetEnvironment }}" \
+              --arg component "${{ inputs.targetComponent }}" \
+              --arg group "${{ inputs.targetAccountGroup }}" \
+              --arg releaseVersion "${{ inputs.releaseVersion }}" \
+              '.workflow_runs[]
+                | select(.name | contains($env) and contains($component) and contains($group) and contains($releaseVersion))
+                | .id' | head -n 1)
+
+            if [[ -n "$run_id" && "$run_id" != null ]]; then
+              echo "Found workflow run with ID: $run_id"
+              break
+            fi
+
+            echo "Waiting for workflow to start..."
+            sleep 10
+          done
+
+          if [[ -z "$run_id" || "$run_id" == null ]]; then
+            echo "Failed to get the workflow run ID. Exiting."
+            exit 1
+          fi
+
+          # Wait for workflow completion
+          while true; do
+            sleep 10
+            status=$(curl -s \
+              -H "Accept: application/vnd.github+json" \
+              -H "Authorization: Bearer ${{ secrets.PR_TRIGGER_PAT }}" \
+              -H "X-GitHub-Api-Version: 2022-11-28" \
+              "https://api.github.com/repos/NHSDigital/nhs-notify-internal/actions/runs/$run_id" \
+              | jq -r '.status')
+
+            conclusion=$(curl -s \
+              -H "Accept: application/vnd.github+json" \
+              -H "Authorization: Bearer ${{ secrets.PR_TRIGGER_PAT }}" \
+              -H "X-GitHub-Api-Version: 2022-11-28" \
+              "https://api.github.com/repos/NHSDigital/nhs-notify-internal/actions/runs/$run_id" \
+              | jq -r '.conclusion')
+
+            if [ "$status" == "completed" ]; then
+              if [ "$conclusion" == "success" ]; then
+                echo "Workflow completed successfully."
+                exit 0
+              else
+                echo "Workflow failed with conclusion: $conclusion"
+                exit 1
+              fi
+            fi
+
+            echo "Workflow still running..."
+            sleep 20
+          done

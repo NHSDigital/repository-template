@@ -1,0 +1,49 @@
+## This workflow is DISABLED.
+## To enable, rename from .disabled to .yaml and replace any references as per the comments.
+name: PR Destroy Environment
+
+on:
+  pull_request:
+    types: [closed]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  create-dynamic-environment:
+    name: Destroy Dynamic Environment
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Trigger nhs-notify-internal dynamic environment destruction
+        shell: bash
+        run: |
+          set -x
+          this_repo_name=$(echo ${{ github.repository }} | cut -d'/' -f2)
+
+          DISPATCH_EVENT=$(jq -ncM \
+            --arg infraRepoName "${this_repo_name}" \
+            --arg releaseVersion "main" \
+            --arg targetEnvironment "pr${{ github.event.number }}" \
+            --arg targetAccountGroup "nhs-notify-bounded-context-dev" \ ## Replace with correct targetAccountGroup
+            --arg targetComponent "component" \ ## Replace with correct targetComponent
+            --arg terraformAction "destroy" \
+            '{ "ref": "main",
+              "inputs": {
+                "infraRepoName": $infraRepoName,
+                "releaseVersion", $releaseVersion,
+                "targetEnvironment", $targetEnvironment,
+                "targetAccountGroup", $targetAccountGroup,
+                "targetComponent", $targetComponent,
+                "terraformAction", $terraformAction,
+              }
+            }')
+
+          curl --fail -L \
+            -X POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${{ secrets.PR_TRIGGER_PAT }}" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            https://api.github.com/repos/NHSDigital/nhs-notify-internal/actions/workflows/dispatch-deploy-dynamic-env.yaml/dispatches \
+            -d "${DISPATCH_EVENT}"

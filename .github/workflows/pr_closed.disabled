@@ -1,0 +1,58 @@
+## This workflow is DISABLED.
+## To enable, rename from .disabled to .yaml and replace any references as per the comments.
+name: PR Closed
+
+on:
+  workflow_dispatch:
+  pull_request:
+    types: [closed]
+    branches:
+      - main
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  check-merge-or-workflow-dispatch:
+    runs-on: ubuntu-latest
+    outputs:
+      deploy: ${{ steps.check.outputs.deploy }}
+    steps:
+      - name: Check if PR was merged or workflow is triggered by workflow_dispatch
+        id: check
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "deploy=true" >> $GITHUB_OUTPUT
+            echo "Job triggered by workflow_dispatch - running 'deploy-main'"
+          elif [[ "${{ github.event_name }}" == "pull_request" && "${{ github.event.pull_request.merged }}" == "true" ]]; then
+            echo "deploy=true" >> $GITHUB_OUTPUT
+            echo "Job triggered by Merged PR - running 'deploy-main'"
+          else
+            echo "deploy=false" >> $GITHUB_OUTPUT
+            echo "Job not triggered by workflow_dispatch or Merged PR - Skipping 'deploy-main'"
+          fi
+
+  deploy-main:
+    needs: check-merge-or-workflow-dispatch
+    name: Deploy changes to main in dev AWS account
+    if: needs.check-merge-or-workflow-dispatch.outputs.deploy == 'true'
+
+    permissions:
+      id-token: write
+      contents: read
+
+    strategy:
+      max-parallel: 1
+      matrix:
+        component: [acct, app]
+
+    uses: ./.github/workflows/reusable_internal_repo_build.yaml
+    secrets: inherit
+    with:
+      releaseVersion: main
+      targetWorkflow: "dispatch-deploy-static-notify-bounded-context-env.yaml" ## Replace with correct targetWorkflow
+      targetEnvironment: "main"
+      targetAccountGroup: "nhs-notify-bounded-context-dev" ## Replace with correct targetAccountGroup
+      targetComponent: ${{ matrix.component }}
+      terraformAction: "apply"

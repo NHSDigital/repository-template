@@ -1,0 +1,34 @@
+## This workflow is DISABLED.
+## To enable, rename from .disabled to .yaml and replace any references as per the comments.
+name: Github Release Created
+
+on:
+  release:
+    types: ["published"] # Inherits all input defaults
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  deploy-main:
+    name: Deploy changes to main in nonprod AWS Account
+
+    permissions:
+      id-token: write
+      contents: read
+
+    strategy:
+      max-parallel: 1
+      matrix:
+        component: [component1, component2] ## Replace with correct components
+
+    uses: ./.github/workflows/reusable_internal_repo_build.yaml
+    secrets: inherit
+    with:
+      releaseVersion: ${{ github.event.release.tag_name }}
+      targetWorkflow: "dispatch-deploy-static-notify-bounded-context-env.yaml" ## Replace with correct targetWorkflow
+      targetEnvironment: "main"
+      targetAccountGroup: "nhs-notify-bounded-context-nonprod" ## Replace with correct targetAccountGroup
+      targetComponent: ${{ matrix.component }}
+      terraformAction: "apply"
