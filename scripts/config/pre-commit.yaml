@@ -63,3 +63,10 @@ repos:
         entry: ./scripts/githooks/check-terraform-docs.sh
         language: script
         pass_filenames: false
+  - repo: local
+    hooks:
+      - id: check-todo-usage
+        name: Check TODO usage
+        entry: /usr/bin/env check=branch ./scripts/githooks/check-todos.sh
+        language: script
+        pass_filenames: false

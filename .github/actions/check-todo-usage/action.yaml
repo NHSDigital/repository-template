@@ -1,0 +1,10 @@
+name: "Check Todo usage"
+description: "Check Todo usage"
+runs:
+  using: "composite"
+  steps:
+    - name: "Check Todo usage"
+      shell: bash
+      run: |
+        export BRANCH_NAME=origin/${{ github.event.repository.default_branch }}
+        check=branch ./scripts/githooks/check-todos.sh

@@ -101,6 +101,17 @@ jobs:
           fetch-depth: 0 # Full history is needed to compare branches
       - name: "Check English usage"
         uses: ./.github/actions/check-english-usage
+  check-todo-usage:
+    name: "Check TODO usage"
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: "Checkout code"
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Full history is needed to compare branches
+      - name: "Check TODO usage"
+        uses: ./.github/actions/check-todo-usage
   detect-terraform-changes:
     name: "Detect Terraform Changes"
     runs-on: ubuntu-latest
