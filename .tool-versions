@@ -3,7 +3,7 @@ gitleaks 8.24.0
 jq 1.6
 nodejs 22.11.0
 pre-commit 3.6.0
-terraform 1.9.2
+terraform 1.10.1
 terraform-docs 0.19.0
 trivy 0.61.0
 vale 3.6.0

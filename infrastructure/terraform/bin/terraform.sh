@@ -600,6 +600,7 @@ readonly backend_config="terraform {
     bucket         = \"${bucket}\"
     key            = \"${backend_key}\"
     dynamodb_table = \"${bucket}\"
+    use_lockfile   = true
   }
 }";
 
