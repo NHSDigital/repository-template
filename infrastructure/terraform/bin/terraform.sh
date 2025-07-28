@@ -403,7 +403,7 @@ readonly component_name=$(basename ${component_path});
 # verify terraform version matches .tool-versions
 echo ${PWD}
 tool_version=$(grep "terraform " .tool-versions | cut -d ' ' -f 2)
-asdf plugin-add terraform && asdf install terraform "${tool_version}"
+asdf plugin add terraform && asdf install terraform "${tool_version}"
 current_version=$(terraform --version | head -n 1 | cut -d 'v' -f 2)
 
 if [ -z "${current_version}" ] || [ "${current_version}" != "${tool_version}" ]; then

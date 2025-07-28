@@ -28,6 +28,7 @@ set -euo pipefail
 EXCLUDED_FILES=(
   ".devcontainer/devcontainer.json"
   ".tool-versions"
+  ".vscode/extensions.json"
   "infrastructure/terraform/bin/terraform.sh"
   "Makefile"
   "project.code-workspace"
@@ -119,7 +120,7 @@ function search_todos() {
 
     # If the file is excluded, skip it
     if [ "$skip" = false ] && [ -f "$file" ]; then
-      file_todos=$(grep -nHi TODO "$file" || true)
+      file_todos=$(grep -nHiE '\bTODO\b' "$file" || true)
       [ -n "$file_todos" ] && todos+="$file_todos\n"
     fi
   done
@@ -135,7 +136,7 @@ function filter_todos_with_valid_jira_ticket() {
 
   while IFS= read -r line; do
     # Only lines with TODO but without a valid JIRA ticket
-    if grep -qi 'TODO' <<< "$line"; then
+    if grep -qnHiE '\bTODO\b' <<< "$line"; then
       if ! [[ "$line" =~ $jira_regex ]]; then
         todos_without_ticket+="$line\n"
       fi
