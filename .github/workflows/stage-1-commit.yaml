@@ -52,7 +52,7 @@ jobs:
         with:
           fetch-depth: 0 # Full history is needed to scan all commits
       - name: "Scan secrets"
-        uses: NHSDigital/nhs-notify-shared-modules/.github/actions/scan-secrets@c0d351d206f638c18349021ad5b79ca65de2b56c # v2.0.32
+        uses: NHSDigital/nhs-notify-shared-modules/.github/actions/scan-secrets@3.0.0
   check-file-format:
     name: "Check file format"
     runs-on: ubuntu-latest
@@ -156,7 +156,7 @@ jobs:
       - name: "Setup ASDF"
         uses: asdf-vm/actions/setup@1902764435ca0dd2f3388eea723a4f92a4eb8302
       - name: "Lint Terraform"
-        uses: NHSDigital/nhs-notify-shared-modules/.github/actions/lint-terraform@c0d351d206f638c18349021ad5b79ca65de2b56c # v2.0.32
+        uses: NHSDigital/nhs-notify-shared-modules/.github/actions/lint-terraform@3.0.0
   #TODO - Re-visit Trivy usage https://nhsd-jira.digital.nhs.uk/browse/CCM-15549
   # trivy-iac:
   #   name: "Trivy IaC Scan"
