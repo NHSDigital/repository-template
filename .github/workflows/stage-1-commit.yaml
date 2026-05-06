@@ -52,7 +52,7 @@ jobs:
         with:
           fetch-depth: 0 # Full history is needed to scan all commits
       - name: "Scan secrets"
-        uses: NHSDigital/nhs-notify-shared-modules/.github/actions/scan-secrets@3.0.0
+        uses: NHSDigital/nhs-notify-shared-modules/.github/actions/scan-secrets@c49f0e52360edb291b09a39ae9c5ac1933716c6c # 3.0.0
   check-file-format:
     name: "Check file format"
     runs-on: ubuntu-latest
@@ -63,7 +63,7 @@ jobs:
         with:
           fetch-depth: 0 # Full history is needed to compare branches
       - name: "Check file format"
-        uses: NHSDigital/nhs-notify-shared-modules/.github/actions/check-file-format@3.0.0
+        uses: NHSDigital/nhs-notify-shared-modules/.github/actions/check-file-format@c49f0e52360edb291b09a39ae9c5ac1933716c6c # 3.0.0
   check-markdown-format:
     name: "Check Markdown format"
     runs-on: ubuntu-latest
@@ -74,7 +74,7 @@ jobs:
         with:
           fetch-depth: 0 # Full history is needed to compare branches
       - name: "Check Markdown format"
-        uses: NHSDigital/nhs-notify-shared-modules/.github/actions/check-markdown-format@3.0.0
+        uses: NHSDigital/nhs-notify-shared-modules/.github/actions/check-markdown-format@c49f0e52360edb291b09a39ae9c5ac1933716c6c # 3.0.0
   terraform-docs:
     name: "Run terraform-docs"
     runs-on: ubuntu-latest
@@ -109,7 +109,7 @@ jobs:
         with:
           fetch-depth: 0 # Full history is needed to compare branches
       - name: "Check English usage"
-        uses: NHSDigital/nhs-notify-shared-modules/.github/actions/check-english-usage@3.0.0
+        uses: NHSDigital/nhs-notify-shared-modules/.github/actions/check-english-usage@c49f0e52360edb291b09a39ae9c5ac1933716c6c # 3.0.0
   check-todo-usage:
     name: "Check TODO usage"
     runs-on: ubuntu-latest
@@ -120,7 +120,7 @@ jobs:
         with:
           fetch-depth: 0 # Full history is needed to compare branches
       - name: "Check TODO usage"
-        uses: NHSDigital/nhs-notify-shared-modules/.github/actions/check-todo-usage@3.0.0
+        uses: NHSDigital/nhs-notify-shared-modules/.github/actions/check-todo-usage@c49f0e52360edb291b09a39ae9c5ac1933716c6c # 3.0.0
   detect-terraform-changes:
     name: "Detect Terraform Changes"
     runs-on: ubuntu-latest
@@ -156,7 +156,7 @@ jobs:
       - name: "Setup ASDF"
         uses: asdf-vm/actions/setup@1902764435ca0dd2f3388eea723a4f92a4eb8302
       - name: "Lint Terraform"
-        uses: NHSDigital/nhs-notify-shared-modules/.github/actions/lint-terraform@3.0.0
+        uses: NHSDigital/nhs-notify-shared-modules/.github/actions/lint-terraform@c49f0e52360edb291b09a39ae9c5ac1933716c6c # 3.0.0
   #TODO - Re-visit Trivy usage https://nhsd-jira.digital.nhs.uk/browse/CCM-15549
   # trivy-iac:
   #   name: "Trivy IaC Scan"
