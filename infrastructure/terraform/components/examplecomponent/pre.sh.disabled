@@ -28,6 +28,12 @@ echo "COMPONENT=$COMPONENT"
 echo "AWS_REGION=$REGION"
 echo "AWS_ACCOUNT_ID=$AWS_ACCOUNT_ID"
 
+# No build steps required for output action
+if [ "${ACTION}" = "output" ]; then
+  echo "ACTION=output: skipping build and dependency steps."
+  return 0
+fi
+
 # Calculate container image prefix from PROJECT, ENVIRONMENT, COMPONENT
 CONTAINER_IMAGE_PREFIX="${PROJECT}-${ENVIRONMENT}-${COMPONENT}"
 echo "CONTAINER_IMAGE_PREFIX: ${CONTAINER_IMAGE_PREFIX}"

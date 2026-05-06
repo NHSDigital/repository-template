@@ -14,7 +14,8 @@
 #     --internalRef <ref> \
 #     --overrides <overrides> \
 #     --overrideProjectName <name> \
-#     --overrideRoleName <name>
+#     --overrideRoleName <name> \
+#     --shardCount <count>
 
 #
 # All arguments are required except terraformAction, and internalRef.
@@ -30,7 +31,8 @@
 #     --internalRef "main" \
 #     --overrides "tf_var=someString" \
 #     --overrideProjectName nhs \
-#     --overrideRoleName nhs-service-iam-role
+#     --overrideRoleName nhs-service-iam-role \
+#     --shardCount "6"
 
 set -e
 
@@ -48,7 +50,8 @@ Usage:
     [--internalRef <ref>] \
     [--overrides <overrides>] \
     [--overrideProjectName <name>] \
-    [--overrideRoleName <name>]
+    [--overrideRoleName <name>] \
+    [--shardCount <count>]
 EOF
   return 0
 }
@@ -110,6 +113,10 @@ while [[ $# -gt 0 ]]; do
       ;;
     --overrideRoleName) # Override the role name (optional)
       overrideRoleName="$2"
+      shift 2
+      ;;
+    --shardCount) # Number of parallel shards to split tests across (optional)
+      shardCount="$2"
       shift 2
       ;;
     *)
@@ -208,6 +215,7 @@ echo "  internalRef:        $internalRef"
 echo "  overrides:          $overrides"
 echo "  overrideProjectName: $overrideProjectName"
 echo "  overrideRoleName:   $overrideRoleName"
+echo "  shardCount:         ${shardCount:-}"
 
 DISPATCH_EVENT=$(jq -ncM \
   --arg internalRef "$internalRef" \
@@ -221,6 +229,7 @@ DISPATCH_EVENT=$(jq -ncM \
   --arg overrides "$overrides" \
   --arg overrideProjectName "$overrideProjectName" \
   --arg overrideRoleName "$overrideRoleName" \
+  --arg shardCount "${shardCount:-}" \
   '{
     "ref": $internalRef,
     "inputs": (
@@ -228,6 +237,7 @@ DISPATCH_EVENT=$(jq -ncM \
       (if $terraformAction != "" then { "terraformAction": $terraformAction } else {} end) +
       (if $overrideProjectName != "" then { "overrideProjectName": $overrideProjectName } else {} end) +
       (if $overrideRoleName != "" then { "overrideRoleName": $overrideRoleName } else {} end) +
+      (if $shardCount != "" then { "shardCount": $shardCount } else {} end) +
       {
         "releaseVersion": $releaseVersion,
         "targetEnvironment": $targetEnvironment,
