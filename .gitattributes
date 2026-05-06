@@ -1,5 +1,4 @@
 scripts/docker/** linguist-vendored
-scripts/githooks/** linguist-vendored
 scripts/reports/** linguist-vendored
 scripts/terraform/** linguist-vendored
 scripts/tests/test.mk linguist-vendored

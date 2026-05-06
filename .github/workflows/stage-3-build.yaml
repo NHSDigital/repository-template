@@ -19,6 +19,10 @@ on:
         description: "Node.js version, set by the CI/CD pipeline workflow"
         required: true
         type: string
+      pnpm_version:
+        description: "pnpm version, set by the CI/CD pipeline workflow"
+        required: true
+        type: string
       python_version:
         description: "Python version, set by the CI/CD pipeline workflow"
         required: true
@@ -33,13 +37,29 @@ on:
         type: string
 
 jobs:
+  artefact-jekyll-docs:
+    name: "Build Docs"
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: "Checkout code"
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+      - name: "Setup pnpm"
+        uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v5.0.0
+        with:
+          version: "${{ inputs.pnpm_version }}"
+          cache: true
+      - name: "Build docs"
+        uses: NHSDigital/nhs-notify-shared-modules/.github/actions/build-docs@c0d351d206f638c18349021ad5b79ca65de2b56c # v2.0.32
+        with:
+          version: "${{ inputs.version }}"
   artefact-1:
     name: "Artefact 1"
     runs-on: ubuntu-latest
     timeout-minutes: 3
     steps:
       - name: "Checkout code"
-        uses: actions/checkout@v4
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
       - name: "Build artefact 1"
         run: |
           echo "Building artefact 1 ..."
@@ -49,21 +69,21 @@ jobs:
       - name: "Upload artefact 1"
         run: |
           echo "Uploading artefact 1 ..."
-          # TODO: Use either action/cache or action/upload-artifact
-  artefact-2:
-    name: "Artefact 2"
+          # Use either action/cache or action/upload-artifact
+  artefact-n:
+    name: "Artefact n"
     runs-on: ubuntu-latest
     timeout-minutes: 3
     steps:
       - name: "Checkout code"
-        uses: actions/checkout@v4
-      - name: "Build artefact 2"
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+      - name: "Build artefact n"
         run: |
-          echo "Building artefact 2 ..."
-      - name: "Check artefact 2"
+          echo "Building artefact n ..."
+      - name: "Check artefact n"
         run: |
-          echo "Checking artefact 2 ..."
-      - name: "Upload artefact 2"
+          echo "Checking artefact n ..."
+      - name: "Upload artefact n"
         run: |
-          echo "Uploading artefact 2 ..."
-          # TODO: Use either action/cache or action/upload-artifact
+          echo "Uploading artefact n ..."
+          # Use either action/cache or action/upload-artifact

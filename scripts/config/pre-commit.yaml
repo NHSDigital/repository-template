@@ -1,40 +1,34 @@
 repos:
-- repo: local
-  hooks:
-  - id: scan-secrets
-    name: Scan secrets
-    entry: ./scripts/githooks/scan-secrets.sh
-    args: ["check=staged-changes"]
-    language: script
-    pass_filenames: false
-- repo: local
-  hooks:
-  - id: check-file-format
-    name: Check file format
-    entry: ./scripts/githooks/check-file-format.sh
-    args: ["check=staged-changes"]
-    language: script
-    pass_filenames: false
-- repo: local
-  hooks:
-  - id: check-markdown-format
-    name: Check Markdown format
-    entry: ./scripts/githooks/check-markdown-format.sh
-    args: ["check=staged-changes"]
-    language: script
-    pass_filenames: false
-- repo: local
-  hooks:
-  - id: check-english-usage
-    name: Check English usage
-    entry: ./scripts/githooks/check-english-usage.sh
-    args: ["check=staged-changes"]
-    language: script
-    pass_filenames: false
-- repo: local
-  hooks:
-  - id: lint-terraform
-    name: Lint Terraform
-    entry: ./scripts/githooks/check-terraform-format.sh
-    language: script
-    pass_filenames: false
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0 # Use the ref you want to point at
+    hooks:
+      - id: trailing-whitespace
+      - id: detect-aws-credentials
+        args: [--allow-missing-credentials]
+      - id: check-added-large-files
+      - id: check-symlinks
+      - id: detect-private-key
+      - id: end-of-file-fixer
+      - id: forbid-new-submodules
+      - id: mixed-line-ending
+      - id: pretty-format-json
+        args: ['--autofix']
+        exclude: '(^|/)package(-lock)?\.json$'
+    # -   id: ...
+
+  - repo: https://github.com/NHSDigital/nhs-notify-shared-modules
+    rev: 3.1.2
+    hooks:
+      - id: sort-dictionary
+      - id: scan-secrets
+        args: [check=whole-history]
+      - id: check-file-format
+        args: [check=branch]
+      - id: check-markdown-format
+        args: [check=branch]
+      - id: check-english-usage
+        args: [check=branch]
+      - id: lint-terraform
+      - id: generate-terraform-docs
+      - id: check-todo-usage
+        args: [check=branch]

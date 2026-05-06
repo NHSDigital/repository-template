@@ -6,23 +6,33 @@ updates:
     directory: "/"
     schedule:
       interval: "daily"
+    commit-message:
+      prefix: "CCM-9336: "
 
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "daily"
+    commit-message:
+      prefix: "CCM-9336: "
 
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
       interval: "daily"
+    commit-message:
+      prefix: "CCM-9336: "
 
   - package-ecosystem: "pip"
     directory: "/"
     schedule:
       interval: "daily"
+    commit-message:
+      prefix: "CCM-9336: "
 
   - package-ecosystem: "terraform"
     directory: "/"
     schedule:
       interval: "daily"
+    commit-message:
+      prefix: "CCM-9336: "

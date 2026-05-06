@@ -12,5 +12,4 @@ cd "$(git rev-parse --show-toplevel)"
 # is to give you fast feedback on the changes you've most recently
 # made.
 
-check=working-tree-changes ./scripts/githooks/check-english-usage.sh && \
-  check=staged-changes ./scripts/githooks/check-english-usage.sh
+pre-commit run check-english-usage --all-files

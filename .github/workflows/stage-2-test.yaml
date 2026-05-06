@@ -87,7 +87,7 @@ jobs:
         with:
           fetch-depth: 0 # Full history is needed to improving relevancy of reporting
       - name: "Perform static analysis"
-        uses: ./.github/actions/perform-static-analysis
+        uses: NHSDigital/nhs-notify-shared-modules/.github/actions/perform-static-analysis@c0d351d206f638c18349021ad5b79ca65de2b56c # v2.0.32
         with:
           sonar_organisation_key: "${{ vars.SONAR_ORGANISATION_KEY }}"
           sonar_project_key: "${{ vars.SONAR_PROJECT_KEY }}"
