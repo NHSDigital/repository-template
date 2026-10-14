@@ -47,7 +47,7 @@ jobs:
         with:
           fetch-depth: 0 # Full history is needed to scan all commits
       - name: "Scan secrets"
-        uses: NHSDigital/nhs-notify-shared-modules/.github/actions/scan-secrets@5.1.3 # NOSONAR - githubactions:S7637 - internally controlled repo, pinned by tag
+        uses: NHSDigital/nhs-notify-shared-modules/.github/actions/scan-secrets@6.0.5 # NOSONAR - githubactions:S7637 - internally controlled repo, pinned by tag
   validate-action-pins:
     name: "Validate action SHA pins"
     runs-on: ubuntu-latest
@@ -56,7 +56,7 @@ jobs:
       - name: "Checkout code"
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: "Validate action SHA pins"
-        uses: NHSDigital/nhs-notify-shared-modules/.github/actions/validate-action-pins@5.1.3 # NOSONAR - githubactions:S7637 - internally controlled repo, pinned by tag
+        uses: NHSDigital/nhs-notify-shared-modules/.github/actions/validate-action-pins@6.0.5 # NOSONAR - githubactions:S7637 - internally controlled repo, pinned by tag
   check-file-format:
     name: "Check file format"
     runs-on: ubuntu-latest
@@ -67,7 +67,7 @@ jobs:
         with:
           fetch-depth: 0 # Full history is needed to compare branches
       - name: "Check file format"
-        uses: NHSDigital/nhs-notify-shared-modules/.github/actions/check-file-format@5.1.3 # NOSONAR - githubactions:S7637 - internally controlled repo, pinned by tag
+        uses: NHSDigital/nhs-notify-shared-modules/.github/actions/check-file-format@6.0.5 # NOSONAR - githubactions:S7637 - internally controlled repo, pinned by tag
   check-markdown-format:
     name: "Check Markdown format"
     runs-on: ubuntu-latest
@@ -78,7 +78,7 @@ jobs:
         with:
           fetch-depth: 0 # Full history is needed to compare branches
       - name: "Check Markdown format"
-        uses: NHSDigital/nhs-notify-shared-modules/.github/actions/check-markdown-format@5.1.3 # NOSONAR - githubactions:S7637 - internally controlled repo, pinned by tag
+        uses: NHSDigital/nhs-notify-shared-modules/.github/actions/check-markdown-format@6.0.5 # NOSONAR - githubactions:S7637 - internally controlled repo, pinned by tag
   terraform-docs:
     name: "Run terraform-docs"
     runs-on: ubuntu-latest
@@ -113,7 +113,7 @@ jobs:
         with:
           fetch-depth: 0 # Full history is needed to compare branches
       - name: "Check English usage"
-        uses: NHSDigital/nhs-notify-shared-modules/.github/actions/check-english-usage@5.1.3 # NOSONAR - githubactions:S7637 - internally controlled repo, pinned by tag
+        uses: NHSDigital/nhs-notify-shared-modules/.github/actions/check-english-usage@6.0.5 # NOSONAR - githubactions:S7637 - internally controlled repo, pinned by tag
   check-todo-usage:
     name: "Check TODO usage"
     runs-on: ubuntu-latest
@@ -124,7 +124,7 @@ jobs:
         with:
           fetch-depth: 0 # Full history is needed to compare branches
       - name: "Check TODO usage"
-        uses: NHSDigital/nhs-notify-shared-modules/.github/actions/check-todo-usage@5.1.3 # NOSONAR - githubactions:S7637 - internally controlled repo, pinned by tag
+        uses: NHSDigital/nhs-notify-shared-modules/.github/actions/check-todo-usage@6.0.5 # NOSONAR - githubactions:S7637 - internally controlled repo, pinned by tag
   detect-terraform-changes:
     name: "Detect Terraform Changes"
     runs-on: ubuntu-latest
@@ -160,7 +160,7 @@ jobs:
       - name: "Setup ASDF"
         uses: asdf-vm/actions/setup@b7bcd026f18772e44fe1026d729e1611cc435d47 # v4.0.1
       - name: "Lint Terraform"
-        uses: NHSDigital/nhs-notify-shared-modules/.github/actions/lint-terraform@5.1.3 # NOSONAR - githubactions:S7637 - internally controlled repo, pinned by tag
+        uses: NHSDigital/nhs-notify-shared-modules/.github/actions/lint-terraform@6.0.5 # NOSONAR - githubactions:S7637 - internally controlled repo, pinned by tag
   count-lines-of-code:
     name: "Count lines of code"
     runs-on: ubuntu-latest
@@ -172,7 +172,7 @@ jobs:
       - name: "Checkout code"
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: "Count lines of code"
-        uses: NHSDigital/nhs-notify-shared-modules/.github/actions/create-lines-of-code-report@5.1.3 # NOSONAR - githubactions:S7637 - internally controlled repo, pinned by tag
+        uses: NHSDigital/nhs-notify-shared-modules/.github/actions/create-lines-of-code-report@6.0.5 # NOSONAR - githubactions:S7637 - internally controlled repo, pinned by tag
         with:
           build_datetime: "${{ inputs.build_datetime }}"
           build_timestamp: "${{ inputs.build_timestamp }}"
@@ -192,7 +192,7 @@ jobs:
       - name: "Checkout code"
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: "Scan dependencies"
-        uses: NHSDigital/nhs-notify-shared-modules/.github/actions/scan-dependencies@6.0.0 # NOSONAR - githubactions:S7637 - internally controlled repo, pinned by tag
+        uses: NHSDigital/nhs-notify-shared-modules/.github/actions/scan-dependencies@6.0.5 # NOSONAR - githubactions:S7637 - internally controlled repo, pinned by tag
         with:
           build_datetime: "${{ inputs.build_datetime }}"
           build_timestamp: "${{ inputs.build_timestamp }}"
