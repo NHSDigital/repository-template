@@ -13,7 +13,7 @@ set -euo pipefail
 # Arguments (provided as environment variables):
 #   DOCKER_IMAGE=ghcr.io/org/repo             # Docker image name
 #   DOCKER_TITLE="My Docker image"            # Docker image title
-#   TOOL_VERSIONS=$project_dir/.tool-versions # Path to the tool versions file
+#   TOOL_VERSIONS=$project_dir/.docker-versions # Path to the Docker image versions file
 
 # ==============================================================================
 # Functions to be used with custom images.
@@ -165,7 +165,7 @@ function version-create-effective-file() {
 # ==============================================================================
 # Functions to be used with external images.
 
-# Retrieve the Docker image version from the '.tool-versions' file and pull the
+# Retrieve the Docker image version from the '.docker-versions' file and pull the
 # image if required. This function is to be used in conjunction with the
 # external images and it prevents Docker from downloading an image each time it
 # is used, since the digest is not stored locally for compressed images. To
@@ -178,15 +178,15 @@ function version-create-effective-file() {
 function docker-get-image-version-and-pull() {
 
   # E.g. for the given entry "# docker/ghcr.io/org/image 1.2.3@sha256:hash" in
-  # the '.tool-versions' file, the following variables will be set to:
+  # the '.docker-versions' file, the following variables will be set to:
   #   name="ghcr.io/org/image"
   #   version="1.2.3@sha256:hash"
   #   tag="1.2.3"
   #   digest="sha256:hash"
 
-  # Get the image full version from the '.tool-versions' file,
+  # Get the image full version from the '.docker-versions' file,
   # match it by name and version regex, if given.
-  local versions_file="${TOOL_VERSIONS:=$(git rev-parse --show-toplevel)/.tool-versions}"
+  local versions_file="${TOOL_VERSIONS:=$(git rev-parse --show-toplevel)/.docker-versions}"
   local version="latest"
   if [[ -f "$versions_file"  ]]; then
     line=$(grep "docker/${name} " "$versions_file" | sed "s/^#\s*//; s/\s*#.*$//" | grep "${match_version:-".*"}" || true)
@@ -243,7 +243,7 @@ function _create-effective-dockerfile() {
 function _replace-image-latest-by-specific-version() {
 
   local dir=${dir:-$PWD}
-  local versions_file="${TOOL_VERSIONS:=$(git rev-parse --show-toplevel)/.tool-versions}"
+  local versions_file="${TOOL_VERSIONS:=$(git rev-parse --show-toplevel)/.docker-versions}"
   local dockerfile="${dir}/Dockerfile.effective"
   local build_datetime=${BUILD_DATETIME:-$(date -u +'%Y-%m-%dT%H:%M:%S%z')}
 

@@ -10,4 +10,4 @@ cd "$(git rev-parse --show-toplevel)"
 # and currently runs via pre-commit against all files for consistency
 # with CI checks.
 
-pre-commit run check-english-usage --all-files
+prek run check-english-usage --all-files

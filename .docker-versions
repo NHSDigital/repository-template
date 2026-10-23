@@ -1,19 +1,5 @@
-act 0.2.64
-gitleaks 8.24.0
-jq 1.6
-nodejs 24.14.1
-pnpm 11.28.5
-pre-commit 3.6.0
-python 3.13.2
-ruby 3.4.9
-terraform 1.15.8
-terraform-docs 0.24.0
-vale 3.6.0
+# Docker image versions, read by scripts/docker/docker.lib.sh. CLI tool versions are pinned in mise.toml.
 
-# ==============================================================================
-# The section below is reserved for Docker image versions.
-
-# TODO: Move this section - consider using a different file for the repository template dependencies.
 # docker/ghcr.io/anchore/grype v0.104.3@sha256:d340f4f8b3b7e6e72a6c9c0152f25402ed8a2d7375dba1dfce4e53115242feb6  # SEE: https://github.com/anchore/grype/pkgs/container/grype
 # docker/ghcr.io/anchore/syft v1.39.0@sha256:6f13bb010923c33fb197047c8f88888e77071bd32596b3f605d62a133e493ce4 # SEE: https://github.com/anchore/syft/pkgs/container/syft
 # docker/ghcr.io/gitleaks/gitleaks:v8.24.0@sha256:b8e9bf46893c2f20e10bfb4b2e783adaef519dea981b01ca6221ac325e836040 # SEE: https://github.com/gitleaks/gitleaks/pkgs/container/gitleaks

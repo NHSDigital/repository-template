@@ -146,7 +146,7 @@ clean:: # Remove Terraform build artifacts and cache @Operations
 # ==============================================================================
 # Installation
 
-terraform-install: # Install Terraform using asdf @Installation
+terraform-install: # Install Terraform using mise @Installation
 	# Example: make terraform-install
 	make _install-dependency name="terraform"
 

@@ -157,8 +157,13 @@ jobs:
     steps:
       - name: "Checkout code"
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - name: "Setup ASDF"
-        uses: asdf-vm/actions/setup@b7bcd026f18772e44fe1026d729e1611cc435d47 # v4.0.1
+      - name: "Setup mise"
+        uses: jdx/mise-action@c2a87611a18de5b3828c5652fe268e992400cb5c # v4.3.0
+        with:
+          install: true
+          cache: true
+        env:
+          MISE_LOCKED: "1"
       - name: "Lint Terraform"
         uses: NHSDigital/nhs-notify-shared-modules/.github/actions/lint-terraform@6.0.5 # NOSONAR - githubactions:S7637 - internally controlled repo, pinned by tag
   count-lines-of-code:

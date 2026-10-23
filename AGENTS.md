@@ -89,7 +89,7 @@ When proposing a change, agents should:
 - **Always** run local pre-commit hooks from the repo root with:
 
   ```sh
-    pre-commit run \
+    prek run \
     --config scripts/config/pre-commit.yaml
   ```
 

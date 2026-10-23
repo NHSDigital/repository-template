@@ -1,5 +1,4 @@
 anonymised
-asdf
 binutils
 Bitwarden
 bot
@@ -19,10 +18,12 @@ Gitleaks
 Grype
 idempotence
 Jira
+mise
 OAuth
 Octokit
 onboarding
 Podman
+prek
 Python
 rawContent
 sed

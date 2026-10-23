@@ -1,0 +1,20 @@
+[settings]
+# Record checksums and download URLs in mise.lock; verified on every install
+lockfile = true
+# Refuse remote code execution paths such as asdf/vfox plugins
+disable_backends = ["asdf", "vfox"]
+# Ignore releases newer than this when resolving versions, giving time for compromised releases to be yanked
+minimum_release_age = "7d"
+
+[tools]
+act = "0.2.64"
+gitleaks = "8.24.0"
+jq = "1.6"
+node = "24.14.1"
+pnpm = "11.28.5"
+prek = "0.5.7"
+python = "3.13.2"
+ruby = "3.4.9"
+terraform = "1.15.8"
+terraform-docs = "0.24.0"
+vale = "3.6.0"

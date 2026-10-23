@@ -400,10 +400,10 @@ pushd "${component_path}";
 readonly component_name=$(basename ${component_path});
 
 # install terraform
-# verify terraform version matches .tool-versions
+# verify terraform version matches mise.toml
 echo ${PWD}
-tool_version=$(grep "terraform " .tool-versions | cut -d ' ' -f 2)
-asdf plugin add terraform && asdf install terraform "${tool_version}"
+MISE_LOCKED=1 mise install terraform
+tool_version=$(mise current terraform)
 current_version=$(terraform --version | head -n 1 | cut -d 'v' -f 2)
 
 if [ -z "${current_version}" ] || [ "${current_version}" != "${tool_version}" ]; then
