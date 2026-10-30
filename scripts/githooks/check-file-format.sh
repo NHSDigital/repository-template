@@ -41,6 +41,14 @@ set -euo pipefail
 # ==============================================================================
 
 function main() {
+  if [[ ${#@} != 0 ]] && declare -f "run-editorconfig$1" >/dev/null 2>&1 ; then
+    "run-editorconfig$1" "${@:2}"
+  else
+    main-invocation "$@"
+  fi
+}
+
+function main-invocation() {
 
   cd "$(git rev-parse --show-toplevel)"
 
@@ -48,60 +56,71 @@ function main() {
   is-arg-true "${dry_run:-false}" && dry_run_opt="--dry-run"
 
   check=${check:-working-tree-changes}
-  case $check in
-    "all")
-      filter="git ls-files"
-      ;;
-    "staged-changes")
-      filter="git diff --diff-filter=ACMRT --name-only --cached"
-      ;;
-    "working-tree-changes")
-      filter="git diff --diff-filter=ACMRT --name-only"
-      ;;
-    "branch")
-      filter="git diff --diff-filter=ACMRT --name-only ${BRANCH_NAME:-origin/main}"
-      ;;
-    *)
-      echo "Unrecognised check mode: $check" >&2 && exit 1
-      ;;
-  esac
+  if ! declare -f "list-files-to-check--$check" >/dev/null 2>&1 ; then
+    echo "Unrecognised check mode: $check" >&2 && exit 1
+  fi
 
   if command -v editorconfig > /dev/null 2>&1 && ! is-arg-true "${FORCE_USE_DOCKER:-false}"; then
-    filter="$filter" dry_run_opt="${dry_run_opt:-}" run-editorconfig-natively
+    method=--natively
   else
-    filter="$filter" dry_run_opt="${dry_run_opt:-}" run-editorconfig-in-docker
+    method=--via-docker
   fi
+
+  list-files-to-check--"$check" |
+  # Maximum size of command line and environment combined is typically
+  # 2MB on Linux but only 256KB on macOS. Assume a maximum filename
+  # length of 200 characters and limiting us to batches of 1000 files
+  # gives us a bit of a safety margin.
+  dry_run_opt="${dry_run_opt:-}" xargs -0 --max-args=1000 --no-run-if-empty scripts/githooks/check-file-format.sh "$method"
 }
 
 # Run editorconfig natively.
 # Arguments (provided as environment variables):
 #   dry_run_opt=[dry run option]
-#   filter=[git command to filter the files to check]
-function run-editorconfig-natively() {
+# Arguments (provided as positional parameters): files to check
+function run-editorconfig--natively() {
 
   # shellcheck disable=SC2046,SC2086
   editorconfig \
-    --exclude '.git/' $dry_run_opt $($filter)
+    --exclude '.git/' $dry_run_opt "$@"
 }
 
 # Run editorconfig in a Docker container.
 # Arguments (provided as environment variables):
 #   dry_run_opt=[dry run option]
-#   filter=[git command to filter the files to check]
-function run-editorconfig-in-docker() {
+# Arguments (provided as positional parameters): files to check
+function run-editorconfig--via-docker() {
 
   # shellcheck disable=SC1091
   source ./scripts/docker/docker.lib.sh
 
   # shellcheck disable=SC2155
   local image=$(name=mstruebing/editorconfig-checker docker-get-image-version-and-pull)
-  # We use /dev/null here as a backstop in case there are no files in the state
-  # we choose. If the filter comes back empty, adding `/dev/null` onto it has
-  # the effect of preventing `ec` from treating "no files" as "all the files".
   docker run --rm --platform linux/amd64 \
     --volume "$PWD":/check \
     "$image" \
-      sh -c "ec --exclude '.git/' $dry_run_opt \$($filter) /dev/null"
+      sh -c "ec --exclude '.git/' $dry_run_opt $(printf '%q ' "$@")"
+}
+
+# ==============================================================================
+
+# These all produce filenames terminated by a NUL character, so that we
+# can handle filenames that contain spaces.
+
+function list-files-to-check--all() {
+  git ls-files -z
+}
+
+function list-files-to-check--staged-changes() {
+  git diff -z --diff-filter=ACMRT --name-only --cached
+}
+
+function list-files-to-check--working-tree-changes() {
+  git diff -z --diff-filter=ACMRT --name-only
+}
+
+function list-files-to-check--branch() {
+  git diff -z --diff-filter=ACMRT --name-only ${BRANCH_NAME:-origin/main}
 }
 
 # ==============================================================================
